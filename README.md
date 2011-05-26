@@ -5,7 +5,6 @@ remote and a receiver. The remote are used as a "remote control" to control what
 These demos does show some new and experimental parts in browsers using native implementations so each demo might
 require different browser versions / experimental browser builds.
 
-- - -
 
 # Getting started
 
@@ -23,4 +22,4 @@ Starting the server:
 
 * In the demos-html5-realtime directory: __cd www__
 * Start the server: __node server.js__
-* The server should now be running at: __http://localhost:8080/___
+* The server should now be running at: __[http://localhost:8080/](http://localhost:8080/ "Demo server running at your local machine")__
