@@ -1,0 +1,48 @@
+<!document html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, maximum-scale=1.0">
+        <title>"HTML5" Clients Interacting Demos</title>
+    </head>
+    <body>
+        <h1>"HTML5" Clients Interacting Demos</h1>
+        <p>
+            These are small demos on two or more clients interacting with each other. Many of the demos has a recorder
+            and a screen. The recorder are intended to be used as a "remote" to control whats going on on the "screen".
+            When using a demo with both a recorder and a screen, open the recorder in the client (device) which shall be
+            the controlling part and the screen in the client which shall be the controlled part.
+        </p>
+
+        <hr>
+
+        <h2>Simple Chat</h2>
+        <p>
+            <a href="chat/">A simple chat</a> example. The example use WebSockets to transfer plain text between two or
+            more clients.
+        </p>
+
+        <hr>
+
+        <h2>Instant Camera</h2>
+        <p>
+            A demo using the Device API for accessing the camera on a device and instantly projecting snapshot images from
+            the recording client to a screen client. The snapshot images are transferred between the clients by a
+            WebSocket connection.
+        </p>
+        <p>
+            <a href="instant_camera/recorder.html">Open recorder</a> - <a href="instant_camera/screen.html">Open screen</a>
+        </p>
+
+        <hr>
+
+        <h2>Remote Rotation</h2>
+        <p>
+            A demo using the DeviceOrientation API to capture the rotation of the recording client and remotely rotate a
+            a image in a screen client. Communication between the clients are done with WebSockets.
+        </p>
+        <p>
+            <a href="remote_rotation/recorder.html">Open recorder</a> - <a href="remote_rotation/screen.html">Open screen</a>
+        </p>
+    </body>
+</html>

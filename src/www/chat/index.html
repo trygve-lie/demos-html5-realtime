@@ -1,0 +1,39 @@
+<!document html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, maximum-scale=1.0">
+        <title>Simple Chat</title>
+        <style>
+            div {margin-top: 100px; margin-left: auto; margin-right: auto; width: 50%;}
+            textarea {padding:  5px 5px 5px 5px;}
+        </style>
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            var socket = new io.Socket(null, {port: 8080, rememberTransport: true});
+            socket.connect();
+
+            socket.on('message', function( obj ){
+
+                if ( typeof obj !== 'object' ) {
+                    var dataObj = JSON.parse(obj);
+                    if ( dataObj.demo.type === "chat" ) {
+                        var recEl = document.getElementById("rec");
+                        recEl.value = dataObj.demo.message;
+                    }
+                }
+            });
+
+            var send = function (ev) {
+                var chat = {"demo" : {
+                    "type"  : "chat",
+                    "message" : ev.value
+                }};
+                socket.send(JSON.stringify(chat));
+            };
+        </script>
+    </head>
+    <body>
+        <textarea id="rec" rows="20" cols="80" onkeyup="send(this);"></textarea>
+    </body>
+</html>

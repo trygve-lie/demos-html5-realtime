@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0">
+    <style>
+        body {width: 100%;}
+        canvas {display: none;}
+    </style>
+    <title>Instant Camera - Recorder</title>
+    <script src="/socket.io/socket.io.js"> </script>
+    <script>
+
+        var video, canvas, msg;
+
+        var load = function () {
+
+            video  = document.getElementById('video');
+            canvas = document.getElementById('canvas');
+            msg    = document.getElementById('error');
+
+            var socket = new io.Socket(null, {port: 8080, rememberTransport: true});
+            socket.connect();
+
+            if( navigator.getUserMedia ) {
+
+                video.onclick = function () {
+                    var context = canvas.getContext("2d");
+                    context.drawImage(video, 0, 0, 240, 320);
+
+                    var image = {"demo" : {
+                        "type"  : "device",
+                        "image" : canvas.toDataURL("image/png")
+                    }};
+                    var imageObj = JSON.stringify(image);
+
+                    socket.send(imageObj);
+                };
+
+                var success = function ( stream ) {
+                    video.src = stream;
+                };
+
+                var error = function ( err ) {
+                    msg.innerHTML = "Error: " + err.code;
+                };
+
+                navigator.getUserMedia('video', success, error);
+
+            } else {
+                msg.innerHTML = "Native web camera not supported :(";
+            }
+
+        };
+
+        window.addEventListener('DOMContentLoaded', load, false);
+    </script>
+</head>
+<body>
+    <video  id="video" width="240" height="320" autoplay> </video>
+    <p      id="error">Click on the video to send a snapshot to the remote screen</p>
+    <canvas id="canvas" width="240" height="320"> </canvas>
+</body>
+</html>
