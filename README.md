@@ -51,3 +51,38 @@ Should be enabled by default.
 #### IE9:
 IE have no support for WebSockets but the IE team has [released a prototype](http://html5labs.interoperabilitybridges.com/html5labs/prototypes/websockets/websockets/info/ "WebSocket prototype for IE")
 which will extend IE with WebSockets.
+
+
+## Enable Device API's
+Different Device API's are fairly new and just starting to occur in browsers. Some of these demos rely on beta and lab
+releases so do expect specific browser versions to run some of these demos. Please see the description of each demo if
+any specific browsers or configuration has to be used or performed.
+
+### Opera Mobile for Android Lab Release
+Opera has a Lab release of Opera Mobile for Android which enables native web camera access and orientation events. The release
+and how to install it can be found at [Opera Core Concerns](http://my.opera.com/core/blog/2011/03/23/webcam-orientation-preview Article on how to install and use Opera Mobile Lab Release with device APIs).
+
+
+## Demos
+
+These are the current demos:
+
+### Simple chat
+A very simple chat client just passing messages between attached clients. Should be able to run in all WebSocket enabled
+browsers.
+
+### Instant Camera
+A remote / receiver demo based on access to the camera on the device. The remote will display the video from the camera
+in a HTML5 video tag on the device which acts as a remote. A snapshot can then be taken on the remote device by clicking
+on the video and the snapshot will instantly be transferred to the receiver and displayed.
+NOTE I: This demo require the Opera Mobile Android Lab Release which gains native access to the web camera. WebSockets must
+be enabled as described above in this document.
+NOTE II: To be able to grab a image from the video stream and transfer it over the wire a security change must be applied
+to the browser. In the address bar, write __opera:config__, select __Security Prefs__ and set __Allow Camera to Canvas Copy__.
+
+### Remote Rotation
+A remote / receiver demo based on orientation events in a device. The remote will capture the orientation events from a
+device and transfer these over a WebSocket to the receiver and create a rotating image in the receiver. The image in the
+receiver will rotate upon how the remote are rotated.
+NOTE: This demo require the Opera Mobile Android Lab Release which gains native access to orientation events. WebSockets
+must be enabled as described above in this document.
