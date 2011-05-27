@@ -60,7 +60,7 @@ any specific browsers or configuration has to be used or performed.
 
 ### Opera Mobile for Android Lab Release
 Opera has a Lab release of Opera Mobile for Android which enables native web camera access and orientation events. The release
-and how to install it can be found at [Opera Core Concerns](http://my.opera.com/core/blog/2011/03/23/webcam-orientation-preview Article on how to install and use Opera Mobile Lab Release with device APIs).
+and how to install it can be found at [Opera Core Concerns](http://my.opera.com/core/blog/2011/03/23/webcam-orientation-preview "Article on how to install and use Opera Mobile Lab Release with device APIs").
 
 
 ## Demos
