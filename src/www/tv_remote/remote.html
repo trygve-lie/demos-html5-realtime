@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0">
+    <title>TV Remote - Remote</title>
+    <script src="/socket.io/socket.io.js"> </script>
+    <script>
+        var socket = new io.Socket(null, {port: 8080, rememberTransport: true});
+        socket.connect();
+
+        var t;
+        var c;
+
+        var height;
+        var width;
+
+        var load = function (ev) {
+
+            t = document.getElementById('touch');
+            c = document.getElementById('click');
+
+            document.onclick = startstop;
+            document.ontouchstart = touchStart;
+            document.ontouchend = touchEnd;
+            document.ontouchmove = touchMove;
+        };
+
+        var startY = 0;
+        var startX = 0;
+        var curY   = 0;
+        var curX   = 0;
+
+        var caluculateAngle = function(sX, sY, cX, cY) {
+            var X = sX - cX;
+            var Y = cY - sY;
+            var Z = Math.round(Math.sqrt(Math.pow(X,2)+Math.pow(Y,2))); //the distance - rounded - in pixels
+            var r = Math.atan2(Y,X);                                    //angle in radians (Cartesian system)
+            var angle = Math.round(r*180/Math.PI);                          //angle in degrees
+            if ( angle < 0 ) {
+                angle =  360 - Math.abs(angle);
+            }
+            return angle;
+        };
+
+        var direction = function (angle) {
+            if ( (angle <= 45) && (angle >= 0) ) {
+                return 'left';
+            } else if ( (angle <= 360) && (angle >= 315) ) {
+                return 'left';
+            } else if ( (angle >= 135) && (angle <= 225) ) {
+                return 'right';
+            } else if ( (angle > 45) && (angle < 135) ) {
+                return 'down';
+            } else {
+                return 'up';
+            }
+        };
+
+
+        var startstop = function (ev) {
+            var action = {"demo" : {
+                "type"  : "tv_startstop"
+            }};
+            c.innerHTML = 'Clicked';
+
+            // ev.preventDefault();
+            // socket.send(JSON.stringify(action));
+        };
+
+
+        var touchStart = function (ev) {
+            startY = ev.touches[0].pageY;
+            startX = ev.touches[0].pageX;
+            //ev.preventDefault();
+        };
+
+        var touchEnd = function (ev) {
+            var a = caluculateAngle(startX,startY,curX, curY);
+            var d = direction(a);
+            t.innerHTML = d;
+            //ev.preventDefault();
+        };
+
+
+
+        var touchMove = function (ev) {
+            curY = ev.touches[0].pageY;
+            curX = ev.touches[0].pageX;
+            //ev.preventDefault();
+        };
+
+        window.addEventListener('DOMContentLoaded', load, false);
+    </script>
+</head>
+<body>
+    <div id="touch">Touch</div>
+    <div id="click">Click</div>
+</body>
+</html>
