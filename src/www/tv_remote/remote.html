@@ -4,97 +4,149 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, maximum-scale=1.0">
     <title>TV Remote - Remote</title>
-    <script src="/socket.io/socket.io.js"> </script>
+    <!-- script src="/socket.io/socket.io.js"> </script-->
     <script>
-        var socket = new io.Socket(null, {port: 8080, rememberTransport: true});
-        socket.connect();
+        // var socket = new io.Socket(null, {port: 8080, rememberTransport: true});
+        // socket.connect();
 
-        var t;
-        var c;
 
-        var height;
-        var width;
+        // Swipe gesture helpers
+
+        var swipe = {
+
+            // Angle of the users swipe
+
+            angle : function angle (startX, startY, currentX, currentY) {
+                var x = startX - currentX;
+                var y = currentY - startY;
+                var radius = Math.atan2( y, x );
+                var angle  = Math.round( radius * 180 / Math.PI );
+                if ( angle < 0 ) {
+                    angle =  360 - Math.abs( angle );
+                }
+                return angle;
+            },
+
+
+            // Direction of the swipe
+
+            direction : function direction ( angle ) {
+                if ( (angle <= 45) && (angle >= 0) ) {
+                    return 'left';
+                } else if ( (angle <= 360) && (angle >= 315) ) {
+                    return 'left';
+                } else if ( (angle >= 135) && (angle <= 225) ) {
+                    return 'right';
+                } else if ( (angle > 45) && (angle < 135) ) {
+                    return 'down';
+                } else {
+                    return 'up';
+                }
+            },
+
+
+            // How fare the user swiped in pixels
+
+            distance : function distance (startX, startY, currentX, currentY) {
+                var x = startX - currentX;
+                var y = currentY - startY;
+
+                return Math.round( Math.sqrt( Math.pow( x , 2 ) + Math.pow( y , 2 ) ) );
+            },
+
+
+            // All info about the swipe
+
+            get : function get (startX, startY, currentX, currentY) {
+
+                var a = this.angle(startX, startY, currentX, currentY);
+                var b = this.direction(a);
+                var c = this.distance(startX, startY, currentX, currentY);
+
+                return {
+                    angle     : a,
+                    direction : b,
+                    distance  : c
+                }
+            }
+
+        };
+
+
+        // Touch detection
+
+        var touch = {
+
+            startX   : undefined,
+            startY   : undefined,
+            currentX : undefined,
+            currentY : undefined,
+
+            start : function start ( ev ) {
+                this.startX = ev.touches[0].pageX;
+                this.startY = ev.touches[0].pageY;
+            },
+
+            move : function move ( ev ) {
+                this.currentX = ev.touches[0].pageX;
+                this.currentY = ev.touches[0].pageY;
+            },
+
+            end : function end ( ev, fn ) {
+
+                // Check if we've got a real swipe
+                if ( this.startY !== undefined && this.startX !== undefined && this.currentY !== undefined && this.currentX !== undefined ) {
+
+                    var interaction = swipe.get( this.startX, this.startY, this.currentX, this.currentY );
+                    if (interaction.distance > 150) {
+                        fn( interaction );
+                    }
+
+                }
+
+                // Reset everything
+                this.startX   = undefined;
+                this.startY   = undefined;
+                this.currentX = undefined;
+                this.currentY = undefined;
+            }
+
+        };
+
+
+
+        var el;
 
         var load = function (ev) {
 
-            t = document.getElementById('touch');
-            c = document.getElementById('click');
+            el = document.getElementById('info');
 
-            document.onclick = startstop;
-            document.ontouchstart = touchStart;
-            document.ontouchend = touchEnd;
-            document.ontouchmove = touchMove;
+            document.onclick        = click;
+            document.ontouchstart   = touch.start;
+            document.ontouchmove    = touch.move;
+            document.ontouchend     = foo;
         };
 
-        var startY = 0;
-        var startX = 0;
-        var curY   = 0;
-        var curX   = 0;
-
-        var caluculateAngle = function(sX, sY, cX, cY) {
-            var X = sX - cX;
-            var Y = cY - sY;
-            var Z = Math.round(Math.sqrt(Math.pow(X,2)+Math.pow(Y,2))); //the distance - rounded - in pixels
-            var r = Math.atan2(Y,X);                                    //angle in radians (Cartesian system)
-            var angle = Math.round(r*180/Math.PI);                          //angle in degrees
-            if ( angle < 0 ) {
-                angle =  360 - Math.abs(angle);
-            }
-            return angle;
+        var foo = function( ev ) {
+            touch.end(ev, function (obj) {
+                el.innerHTML = 'Touch: ' + obj.direction;
+            });
         };
 
-        var direction = function (angle) {
-            if ( (angle <= 45) && (angle >= 0) ) {
-                return 'left';
-            } else if ( (angle <= 360) && (angle >= 315) ) {
-                return 'left';
-            } else if ( (angle >= 135) && (angle <= 225) ) {
-                return 'right';
-            } else if ( (angle > 45) && (angle < 135) ) {
-                return 'down';
-            } else {
-                return 'up';
-            }
-        };
-
-
-        var startstop = function (ev) {
+        var click = function ( ev ) {
             var action = {"demo" : {
                 "type"  : "tv_startstop"
             }};
-            c.innerHTML = 'Clicked';
+            el.innerHTML = 'Click';
 
-            // ev.preventDefault();
             // socket.send(JSON.stringify(action));
         };
 
 
-        var touchStart = function (ev) {
-            startY = ev.touches[0].pageY;
-            startX = ev.touches[0].pageX;
-            //ev.preventDefault();
-        };
-
-        var touchEnd = function (ev) {
-            var a = caluculateAngle(startX,startY,curX, curY);
-            var d = direction(a);
-            t.innerHTML = d;
-            //ev.preventDefault();
-        };
-
-
-
-        var touchMove = function (ev) {
-            curY = ev.touches[0].pageY;
-            curX = ev.touches[0].pageX;
-            //ev.preventDefault();
-        };
-
-        window.addEventListener('DOMContentLoaded', load, false);
+        document.addEventListener('DOMContentLoaded', load, false);
     </script>
 </head>
 <body>
-    <div id="touch">Touch</div>
-    <div id="click">Click</div>
+    <div id="info"> </div>
 </body>
 </html>
