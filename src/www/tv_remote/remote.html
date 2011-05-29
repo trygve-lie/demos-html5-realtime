@@ -4,10 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, maximum-scale=1.0">
     <title>TV Remote - Remote</title>
-    <!-- script src="/socket.io/socket.io.js"> </script-->
+    <script src="/socket.io/socket.io.js"> </script>
     <script>
-        // var socket = new io.Socket(null, {port: 8080, rememberTransport: true});
-        // socket.connect();
+        var socket = new io.Socket(null, {port: 8080, rememberTransport: true});
+        socket.connect();
+
+        var el;
 
 
         // Swipe gesture helpers
@@ -19,11 +21,12 @@
             angle : function angle (startX, startY, currentX, currentY) {
                 var x = startX - currentX;
                 var y = currentY - startY;
-                var radius = Math.atan2( y, x );
-                var angle  = Math.round( radius * 180 / Math.PI );
+                var radius = Math.atan2(y,x);
+                var angle  = Math.round(radius*180/Math.PI);
                 if ( angle < 0 ) {
                     angle =  360 - Math.abs( angle );
                 }
+
                 return angle;
             },
 
@@ -83,39 +86,79 @@
             currentY : undefined,
 
             start : function start ( ev ) {
-                this.startX = ev.touches[0].pageX;
-                this.startY = ev.touches[0].pageY;
+                touch.startX = ev.touches[0].pageX;
+                touch.startY = ev.touches[0].pageY;
             },
 
             move : function move ( ev ) {
-                this.currentX = ev.touches[0].pageX;
-                this.currentY = ev.touches[0].pageY;
+                touch.currentX = ev.touches[0].pageX;
+                touch.currentY = ev.touches[0].pageY;
             },
 
             end : function end ( ev, fn ) {
 
                 // Check if we've got a real swipe
-                if ( this.startY !== undefined && this.startX !== undefined && this.currentY !== undefined && this.currentX !== undefined ) {
-
-                    var interaction = swipe.get( this.startX, this.startY, this.currentX, this.currentY );
-                    if (interaction.distance > 150) {
+                if ( touch.startY !== undefined && touch.startX !== undefined && touch.currentY !== undefined && touch.currentX !== undefined ) {
+                    var interaction = swipe.get( touch.startX, touch.startY, touch.currentX, touch.currentY );
+                    if (interaction.distance > 100) {
                         fn( interaction );
                     }
-
                 }
 
                 // Reset everything
-                this.startX   = undefined;
-                this.startY   = undefined;
-                this.currentX = undefined;
-                this.currentY = undefined;
+                touch.startX   = undefined;
+                touch.startY   = undefined;
+                touch.currentX = undefined;
+                touch.currentY = undefined;
             }
 
         };
 
 
+        // Handle volume up / down and next / previous video
 
-        var el;
+        var touchAction = function( ev ) {
+            touch.end(ev, function (obj) {
+                el.innerHTML = 'Touch: ' + obj.direction;
+
+                var action = {"demo" : {
+                    "type"  : undefined
+                }};
+
+                if (obj.direction === 'up') {
+                    action.demo.type = "tv_up"
+                }
+
+                if (obj.direction === 'down') {
+                    action.demo.type = "tv_down"
+                }
+
+                if (obj.direction === 'left') {
+                    action.demo.type = "tv_left"
+                }
+
+                if (obj.direction === 'right') {
+                    action.demo.type = "tv_right"
+                }
+
+                socket.send(JSON.stringify(action));
+            });
+        };
+
+
+        // Handle start / stop of video
+
+        var click = function ( ev ) {
+            var action = {"demo" : {
+                "type"  : "tv_startstop"
+            }};
+            el.innerHTML = 'Click';
+
+            socket.send(JSON.stringify(action));
+        };
+
+
+        // Stuff to load on load
 
         var load = function (ev) {
 
@@ -124,24 +167,8 @@
             document.onclick        = click;
             document.ontouchstart   = touch.start;
             document.ontouchmove    = touch.move;
-            document.ontouchend     = foo;
+            document.ontouchend     = touchAction;
         };
-
-        var foo = function( ev ) {
-            touch.end(ev, function (obj) {
-                el.innerHTML = 'Touch: ' + obj.direction;
-            });
-        };
-
-        var click = function ( ev ) {
-            var action = {"demo" : {
-                "type"  : "tv_startstop"
-            }};
-            el.innerHTML = 'Click';
-
-            // socket.send(JSON.stringify(action));
-        };
-
 
         document.addEventListener('DOMContentLoaded', load, false);
     </script>

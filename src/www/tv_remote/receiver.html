@@ -5,29 +5,117 @@
         <meta name="viewport" content="width=device-width, maximum-scale=1.0">
         <title>TV Remote - Receiver</title>
         <style>
-
+            p {
+                margin:  5px 0 0 0;
+                padding:  0;
+            }
         </style>
         <script src="/socket.io/socket.io.js"> </script>
         <script>
             var socket = new io.Socket(null, {port: 8080, rememberTransport: true});
             socket.connect();
 
-            var video;
+            var videos = [
+                {url : 'http://www.archive.org/download/woody_woodpecker_pantry_panic/woody_woodpecker_pantry_panic.ogv', title : 'Woody Woodpecker in Pantry Panic'},
+                {url : 'http://www.archive.org/download/superman_the_mechanical_monsters/superman_the_mechanical_monsters.ogv', title : 'Superman: The Mechanical Monsters'},
+                {url : 'http://www.archive.org/download/mighty_mouse_wolf_wolf/mighty_mouse_wolf_wolf.ogv', title: 'Mighty Mouse: Wolf! Wolf!'},
+                {url : 'http://www.archive.org/download/superman_eleventh_hour/superman_eleventh_hour.ogv', title : 'Superman: Eleventh Hour'},
+                {url : 'http://www.archive.org/download/Popeye_forPresident/Popeye_forPresident.ogv', title : 'Popeye for President '},
+                {url : 'http://www.archive.org/download/HepCatSymphony/HepCatSymphony.ogv', title : 'Hep Cat Symphony'},
+                {url : 'http://www.archive.org/download/Felix_NeptuneNonsense/Felix_NeptuneNonsense.ogv', title : 'Felix the Cat in Neptune Nonsense'},
+                {url : 'http://www.archive.org/download/hectors_hectic_life/hectors_hectic_life.ogv', title : 'Hectors Hectic Life'},
+                {url : 'http://www.archive.org/download/gabby_alls_well/gabby_alls_well.ogv', title : 'Gabby: All is Well'},
+                {url : 'http://www.archive.org/download/noveltoon_casper_tfg_theres_good_boos_tonight/noveltoon_casper_tfg_theres_good_boos_tonight.ogv', title : 'Caspar The Friendly Ghost in Theres Good Boos Tonight'}
+            ];
+
+            var elVideo;
+            var elTitle;
+            var elVolume;
+            var elStatus;
+
+            var videoVolume = 5;
+            var videoIndex = 0;
+            var videoPlaying = false;
+
 
             var load = function () {
-                video = document.getElementById('video');
+                elVideo = document.getElementById('video');
+                elTitle = document.getElementById('title');
+                elVolume = document.getElementById('volume');
+                elStatus = document.getElementById('status');
+
+                elVideo.src = videos[videoIndex].url;
+                elVideo.volume = videoVolume / 10;
+
+                elTitle.innerHTML = elTitle.getAttribute('data-title') + ' ' + videos[videoIndex].title;
+                elVolume.innerHTML = elVolume.getAttribute('data-title') + ' ' + videoVolume;
+                elStatus.innerHTML = 'Paused';
+
+
             };
+
 
             socket.on('message', function( obj ){
 
                 if ( typeof obj !== 'object' ) {
                     var dataObj = JSON.parse(obj);
 
+                    // Click on the remote
+
                     if (dataObj.demo.type === "tv_startstop") {
-                        if ( video.paused ) {
-                            video.play();
+                        if ( elVideo.paused ) {
+                            elVideo.play();
+                            videoPlaying = true;
+                            elStatus.innerHTML = 'Playing';
                         } else {
-                            video.pause();
+                            elVideo.pause();
+                            videoPlaying = false;
+                            elStatus.innerHTML = 'Paused';
+                        }
+                    }
+
+                    // Swipe up on the remote
+                    if (dataObj.demo.type === "tv_up") {
+                        if ( videoVolume !== 10 ) {
+                            videoVolume++;
+                            elVideo.volume = videoVolume / 10;
+                            elVolume.innerHTML = elVolume.getAttribute('data-title') + ' ' + videoVolume;
+                        }
+                    }
+
+                    // Swipe down on the remote
+                    if (dataObj.demo.type === "tv_down") {
+                        if ( videoVolume !== 0 ) {
+                            videoVolume--;
+                            elVideo.volume = videoVolume / 10;
+                            elVolume.innerHTML = elVolume.getAttribute('data-title') + ' ' + videoVolume;
+                        }
+                    }
+
+                    // Swipe right on the remote
+                    if (dataObj.demo.type === "tv_right") {
+                        if ( videoIndex !== 10 ) {
+                            videoIndex++;
+                            elVideo.src = videos[videoIndex].url;
+                            elVideo.volume = videoVolume / 10;
+                            elTitle.innerHTML = elTitle.getAttribute('data-title') + ' ' + videos[videoIndex].title;
+                            if ( videoPlaying ) {
+                                elVideo.play();
+                            }
+                        }
+
+                    }
+
+                    // Swipe left on the remote
+                    if (dataObj.demo.type === "tv_left") {
+                        if ( videoIndex !== 0 ) {
+                            videoIndex--;
+                            elVideo.src = videos[videoIndex].url;
+                            elVideo.volume = videoVolume / 10;
+                            elTitle.innerHTML = elTitle.getAttribute('data-title') + ' ' + videos[videoIndex].title;
+                            if ( videoPlaying ) {
+                                elVideo.play();
+                            }
                         }
                     }
 
@@ -39,6 +127,9 @@
         </script>
     </head>
     <body id="b">
-        <video id="video" width="640" height="480" controls src="http://www.archive.org/download/woody_woodpecker_pantry_panic/woody_woodpecker_pantry_panic.ogv"> </video>
+        <video id="video" width="640" height="480" controls src=""> </video>
+        <p id="title" data-title="Title:"> </p>
+        <p id="status" data-title="Status:"> </p>
+        <p id="volume" data-title="Volume:"> </p>
     </body>
 </html>
