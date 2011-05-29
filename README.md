@@ -67,11 +67,11 @@ and how to install it can be found at [Opera Core Concerns](http://my.opera.com/
 
 These are the current demos:
 
-### Simple chat:
+### Demo I - Simple chat:
 A very simple chat client just passing messages between attached clients. Should be able to run in all WebSocket enabled
 browsers.
 
-### Instant Camera:
+### Demo II - Instant Camera:
 A remote / receiver demo based on access to the camera on the device. The remote will display the video from the camera
 in a HTML5 video tag on the device which acts as a remote. A snapshot can then be taken on the remote device by clicking
 on the video and the snapshot will instantly be transferred to the receiver and displayed.
@@ -82,7 +82,7 @@ be enabled as described above in this document.
 NOTE II: To be able to grab a image from the video stream and transfer it over the wire a security change must be applied
 to the browser. In the address bar, write __opera:config__, select __Security Prefs__ and set __Allow Camera to Canvas Copy__.
 
-### Remote Rotation:
+### Demo III - Remote Rotation:
 A remote / receiver demo based on orientation events in a device. The remote will capture the orientation events from a
 device and transfer these over a WebSocket to the receiver and create a rotating image in the receiver. The image in the
 receiver will rotate depending upon how the remote is rotated.
@@ -90,7 +90,7 @@ receiver will rotate depending upon how the remote is rotated.
 NOTE: This demo requires the Opera Mobile Android Lab Release which gains native access to orientation events. WebSockets
 must be enabled as described above in this document.
 
-### TV Remote
+### Demo IV - TV Remote:
 A remote / receiver demo where a remote (handheld) device with touch events control playback, volume and switching between
 videos on a receiving device. Touch and click events are captured on the remote device and transferred trough a WebSocket
 to the receiving device.
