@@ -76,6 +76,8 @@ A remote / receiver demo based on access to the camera on the device. The remote
 in a HTML5 video tag on the device which acts as a remote. A snapshot can then be taken on the remote device by clicking
 on the video and the snapshot will instantly be transferred to the receiver and displayed.
 
+Screencast: [http://www.youtube.com/watch?v=jqXo-AEVhK4](http://www.youtube.com/watch?v=jqXo-AEVhK4 "Screen cast of the demo on YouTube")
+
 NOTE I: This demo requires the Opera Mobile Android Lab Release which gains native access to the web camera. WebSockets must
 be enabled as described above in this document.
 
@@ -87,6 +89,8 @@ A remote / receiver demo based on orientation events in a device. The remote wil
 device and transfer these over a WebSocket to the receiver and create a rotating image in the receiver. The image in the
 receiver will rotate depending upon how the remote is rotated.
 
+Screencast: [http://www.youtube.com/watch?v=x2T4BJwPRnQ](http://www.youtube.com/watch?v=x2T4BJwPRnQ "Screen cast of the demo on YouTube")
+
 NOTE: This demo requires the Opera Mobile Android Lab Release which gains native access to orientation events. WebSockets
 must be enabled as described above in this document.
 
@@ -97,6 +101,8 @@ to the receiving device.
 
 Click the screen on the remote to start and stop playback. Swipe up to increase the volume. Swipe down to decrease the volume.
 Swipe to the right to switch to the next video and swipe to the left to switch to the previous video.
+
+Screencast: [http://www.youtube.com/watch?v=3e18_qX8vok](http://www.youtube.com/watch?v=3e18_qX8vok "Screen cast of the demo on YouTube")
 
 NOTE: This demo requires a device with touch events to act as a remote. The receiver must be able to play HTML5 video and
 have support for Ogg Theora. Both devices need WebSockets enabled.
