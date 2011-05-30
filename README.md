@@ -14,7 +14,7 @@ for WebSockets so [Node.js](http://nodejs.org/ "Homepage of Node.js") is needed.
 
 Installation:
 
-* Download and install [Node.js](http://nodejs.org/ "Homepage of Node.js") 4.x or never
+* Download and install [Node.js](http://nodejs.org/ "Homepage of Node.js") 4.x or later
 * Install [npm](http://npmjs.org/ "Homepage of Node Package Manager")
 * Install socket.io: __npm install socket.io__
 
@@ -53,8 +53,8 @@ IE has no support for WebSockets but the IE team has [released a prototype](http
 which will extend IE with WebSockets.
 
 
-## Enable Device API's
-Different Device API's are fairly new and just starting to occur in browsers. Some of these demos rely on beta and lab
+## Enable Device APIs
+Different Device APIs are fairly new and just starting to occur in browsers. Some of these demos rely on beta and lab
 releases so do expect specific browser versions to run some of these demos. Please see the description of each demo if
 any specific browsers or configuration has to be used or performed.
 
