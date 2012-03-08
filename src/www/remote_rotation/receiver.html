@@ -21,10 +21,8 @@
                 height: 256px;
             }
         </style>
-        <script src="/socket.io/socket.io.js"> </script>
         <script>
-            var socket = new io.Socket(null, {port: 8080, rememberTransport: true});
-            socket.connect();
+            var ws = new WebSocket( 'ws://' + window.location.host );
 
             var el;
 
@@ -32,16 +30,17 @@
                 el = document.getElementById('img');
             };
 
-            socket.on('message', function( obj ){
+            ws.onmessage = function( obj ){
 
-                if ( typeof obj !== 'object' ) {
-                    var dataObj = JSON.parse(obj);
+                if ( typeof obj.data !== 'object' ) {
+                    var dataObj = JSON.parse( obj.data );
+                    console.log( dataObj.demo.alpha );
                     if (dataObj.demo.type === "orientation") {
-                        el.style = "-moz-transform: rotate(" + dataObj.demo.alpha + "deg); -ms-transform: rotate(" + dataObj.demo.alpha + "deg); -o-transform: rotate(" + dataObj.demo.alpha + "deg); transform: rotate(" + dataObj.demo.alpha + "deg);"
+                        el.style = "-webkit-transform: rotate(" + dataObj.demo.alpha + "deg); -moz-transform: rotate(" + dataObj.demo.alpha + "deg); -ms-transform: rotate(" + dataObj.demo.alpha + "deg); -o-transform: rotate(" + dataObj.demo.alpha + "deg); transform: rotate(" + dataObj.demo.alpha + "deg);"
                     }
                 }
 
-            });
+            };
 
             window.addEventListener('DOMContentLoaded', load, false);
         </script>
