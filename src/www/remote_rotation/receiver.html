@@ -34,7 +34,6 @@
 
                 if ( typeof obj.data !== 'object' ) {
                     var dataObj = JSON.parse( obj.data );
-                    console.log( dataObj.demo.alpha );
                     if (dataObj.demo.type === "orientation") {
                         el.style = "-webkit-transform: rotate(" + dataObj.demo.alpha + "deg); -moz-transform: rotate(" + dataObj.demo.alpha + "deg); -ms-transform: rotate(" + dataObj.demo.alpha + "deg); -o-transform: rotate(" + dataObj.demo.alpha + "deg); transform: rotate(" + dataObj.demo.alpha + "deg);"
                     }
