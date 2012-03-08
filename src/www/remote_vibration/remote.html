@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0">
+    <title>Remote Vibration - Remote</title>
+    <script>
+        var ws = new WebSocket( 'ws://' + window.location.host );
+
+        var el;
+
+        function onShake (event){
+            var acceleration = {"demo" : {
+                type  : "vibrate",
+                x     : Math.abs( event.acceleration.x ),
+                y     : Math.abs( event.acceleration.y ),
+                z     : Math.abs( event.acceleration.z )
+            }};
+
+            if ( ( acceleration.demo.x || acceleration.demo.y || acceleration.demo.z ) > 9 ){
+                ws.send( JSON.stringify( acceleration ) );
+            }
+        }
+
+        window.addEventListener('devicemotion', onShake, true);
+    </script>
+</head>
+<body>
+    <h1>Remote vibration</h1>
+    <p>Shake your device to send remote vibration...</p>
+</body>
+</html>

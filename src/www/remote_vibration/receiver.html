@@ -1,0 +1,27 @@
+<!document html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, maximum-scale=1.0">
+        <title>Remote Vibration - Receiver</title>
+        <script>
+            var ws = new WebSocket( 'ws://' + window.location.host );
+
+            ws.onmessage = function( obj ){
+
+                if ( typeof obj.data !== 'object' ) {
+                    var dataObj = JSON.parse( obj.data );
+                    if (dataObj.demo.type === "vibrate") {
+                        navigator.mozVibrate( Math.max( dataObj.demo.x, dataObj.demo.y, dataObj.demo.z ) * 10 );
+                    }
+                }
+
+            };
+
+            window.addEventListener('DOMContentLoaded', load, false);
+        </script>
+    </head>
+    <body>
+        <h1>Remote vibration</h1>
+    </body>
+</html>
