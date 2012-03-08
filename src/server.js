@@ -98,4 +98,5 @@ wss.on('connection', function ( ws ) {
 });
 
 
-httpServer.listen( 8080 );
+httpServer.listen( process.argv[2] ? process.argv[2] : 8080 );
+console.log('Server running at port:', process.argv[2] ? process.argv[2] : 8080 );
