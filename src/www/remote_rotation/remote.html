@@ -4,10 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, maximum-scale=1.0">
     <title>Remote Rotation - Remote</title>
-    <!-- script src="/socket.io/socket.io.js"> </script -->
     <script>
-        // var socket = new io.Socket(null, {port: 8080, rememberTransport: true});
-        // socket.connect();
         var ws = new WebSocket( 'ws://' + window.location.host );
 
         var el;
@@ -24,7 +21,6 @@
                 "gamma" : ev.gamma
             }};
             el.innerHTML = "Alpha: " + ev.alpha + " Beta: " + ev.beta + " Gamma: " + ev.gamma;
-            // socket.send(JSON.stringify(orientation));
             ws.send( JSON.stringify( orientation ) );
         };
 
