@@ -8,7 +8,6 @@
         canvas {display: none;}
     </style>
     <title>Instant Camera - Remote</title>
-    <script src="/socket.io/socket.io.js"> </script>
     <script>
 
         var video, canvas, msg;
@@ -19,8 +18,7 @@
             canvas = document.getElementById('canvas');
             msg    = document.getElementById('error');
 
-            var socket = new io.Socket(null, {port: 8080, rememberTransport: true});
-            socket.connect();
+            var ws = new WebSocket( 'ws://' + window.location.host );
 
             if( navigator.getUserMedia ) {
 
@@ -32,9 +30,9 @@
                         "type"  : "device",
                         "image" : canvas.toDataURL("image/png")
                     }};
-                    var imageObj = JSON.stringify(image);
+                    var imageObj = JSON.stringify( image );
 
-                    socket.send(imageObj);
+                    ws.send( JSON.stringify( image ) );
                 };
 
                 var success = function ( stream ) {
