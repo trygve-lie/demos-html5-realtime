@@ -1,13 +1,15 @@
-var http = require('http');
-var url = require('url');
-var path = require('path');
-var fs = require('fs');
-var sys = require('sys');
-var io = require('socket.io');
+var http = require('http'),
+    url = require('url'),
+    path = require('path'),
+    fs = require('fs'),
+    util = require('util'),
+    WebSocketServer = require('ws').Server,
+    clients = [];
+
 
 
 // Simplest HTTP server eva!
-server = http.createServer( function ( request, response ){
+var httpServer = http.createServer( function ( request, response ){
 
     var uri = url.parse(request.url).pathname;
     var filepath = "www" + uri;
@@ -41,13 +43,59 @@ server = http.createServer( function ( request, response ){
     });
 
 });
-server.listen(8080);
 
 
-// Even simpler websocket server
-var socket = io.listen(server);
-socket.on('connection', function ( client ) {
-    client.on('message', function ( message ) {
-        client.broadcast( message );
+
+// Broadcast message to all clients except source client
+
+function broadcast ( client, message ) {
+    var i = clients.length;
+    while ( i-- ) {
+        if ( clients[ i ] !== client ) {
+            clients[ i ].send( message );
+        }
+    }
+}
+
+
+
+// Remove a client from the client pool
+
+function removeClient ( client ) {
+    var i = clients.indexOf( client );
+    if (i !== -1) {
+        clients.splice(i, 1);
+    }
+}
+
+
+
+// Simple WebSocket broadcast server
+
+var wss = new WebSocketServer( { server :  httpServer } );
+
+wss.on('connection', function ( ws ) {
+
+    clients.push( ws );
+
+    ws.send( JSON.stringify(
+        {demo : {
+            type  : "info"
+        } }
+    ));
+
+    ws.on('message',function ( message ) {
+        broadcast( ws, message );
+    });
+
+    ws.on('close', function () {
+        removeClient( ws );
+    });
+
+    ws.on('error', function () {
+        removeClient( ws );
     });
 });
+
+
+httpServer.listen( 8080 );
