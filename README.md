@@ -9,14 +9,13 @@ require different browser versions / experimental browser builds.
 ## Getting started
 
 For clients to communicate with each other most demos rely on a [WebSocket](http://dev.w3.org/html5/websockets/ "The WebSocket specification at W3C")
-connection. Iow; a server is needed. These demos come with a very simple server which uses [socket.io](http://socket.io/ "Homepage of socket.io")
+connection. Iow; a server is needed. These demos come with a very simple server which uses [ws](https://github.com/einaros/ws "Gighub page of ws")
 for WebSockets so [Node.js](http://nodejs.org/ "Homepage of Node.js") is needed.
 
 Installation:
 
-* Download and install [Node.js](http://nodejs.org/ "Homepage of Node.js") 4.x or later
-* Install [npm](http://npmjs.org/ "Homepage of Node Package Manager")
-* Install socket.io: __npm install socket.io__
+* Download and install [Node.js](http://nodejs.org/ "Homepage of Node.js") 6.x or later
+* Install ws: __npm install ws__
 
 Starting the server:
 
@@ -26,8 +25,7 @@ Starting the server:
 
 
 ## Enable WebSockets
-Even if socket.io provides fallback solutions like WebSockets trough Flash or HTTP LongPolling the ideal situation is to
-use native WebSockets in modern browsers. At the time of writing, WebSockets are implemented or available in most modern browsers but
+These demos use native WebSockets in modern browsers. At the time of writing, WebSockets are implemented or available in most modern browsers but
 due to a [security issue](http://www.ietf.org/mail-archive/web/hybi/current/msg04744.html "Adam Barth on the security issue in WebSockets")
 they are disabled in some browsers:
 
@@ -58,18 +56,22 @@ Different Device APIs are fairly new and just starting to occur in browsers. Som
 releases so do expect specific browser versions to run some of these demos. Please see the description of each demo if
 any specific browsers or configuration has to be used or performed.
 
-### Opera Mobile for Android Lab Release
-Opera has a Lab release of Opera Mobile for Android which enables native web camera access and orientation events. The release
-and how to install it can be found at [Opera Core Concerns](http://my.opera.com/core/blog/2011/03/23/webcam-orientation-preview "Article on how to install and use Opera Mobile Lab Release with device APIs").
+### Opera Mobile 12
+Opera Mobile 12 for Android has native camera access and orientation events.
+
+### Firefox Mobile Nightly
+[Firefox Mobile nightly](https://wiki.mozilla.org/Mobile/Platforms/Android "Overview of Firefox mobile builds") has Vibration API implemented.
 
 
 ## Demos
 
 These are the current demos:
 
+
 ### Demo I - Simple chat:
 A very simple chat client just passing messages between attached clients. Should be able to run in all WebSocket enabled
 browsers.
+
 
 ### Demo II - Instant Camera:
 A remote / receiver demo based on access to the camera on the device. The remote will display the video from the camera
@@ -78,11 +80,12 @@ on the video and the snapshot will instantly be transferred to the receiver and 
 
 Screencast: [http://www.youtube.com/watch?v=jqXo-AEVhK4](http://www.youtube.com/watch?v=jqXo-AEVhK4 "Screen cast of the demo on YouTube")
 
-NOTE I: This demo requires the Opera Mobile Android Lab Release which gains native access to the web camera. WebSockets must
+NOTE I: This demo requires the Opera Mobile 12 for Android which gains native access to the web camera. WebSockets must
 be enabled as described above in this document.
 
 NOTE II: To be able to grab a image from the video stream and transfer it over the wire a security change must be applied
 to the browser. In the address bar, write __opera:config__, select __Security Prefs__ and set __Allow Camera to Canvas Copy__.
+
 
 ### Demo III - Remote Rotation:
 A remote / receiver demo based on orientation events in a device. The remote will capture the orientation events from a
@@ -91,8 +94,9 @@ receiver will rotate depending upon how the remote is rotated.
 
 Screencast: [http://www.youtube.com/watch?v=x2T4BJwPRnQ](http://www.youtube.com/watch?v=x2T4BJwPRnQ "Screen cast of the demo on YouTube")
 
-NOTE: This demo requires the Opera Mobile Android Lab Release which gains native access to orientation events. WebSockets
+NOTE: This demo requires the Opera Mobile 12 for Android which gains native access to orientation events. WebSockets
 must be enabled as described above in this document.
+
 
 ### Demo IV - TV Remote:
 A remote / receiver demo where a remote (handheld) device with touch events control playback, volume and switching between
@@ -106,3 +110,11 @@ Screencast: [http://www.youtube.com/watch?v=3e18_qX8vok](http://www.youtube.com/
 
 NOTE: This demo requires a device with touch events to act as a remote. The receiver must be able to play HTML5 video and
 have support for Ogg Theora. Both devices need WebSockets enabled.
+
+
+### Demo V - Remove Vibration:
+A remote / receiver demo where a remote (handheld) device with support for device orientation acts as remote to trigger
+the Vibration API in a receiver (handheld) device. Shake the remote device and the receiver device will vibrate according
+to the shaking...
+
+NOTE I: This demo requires the Firefox mobile nightly to act as the receiving part.
